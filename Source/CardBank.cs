@@ -5,6 +5,8 @@
 ////////////////////////////////////
 
 using System;
+using System.Text;
+using System.Windows.Forms;
 
 namespace IntelOrca.WITC
 {
@@ -56,6 +58,21 @@ namespace IntelOrca.WITC
 		public void ResetUsedCards(string category)
 		{
 			mUsedCards[category].Clear();
+		}
+
+		public void CheckForDuplicates()
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (Category category in mCategories) {
+				string lines = category.CheckForDuplicates();
+				if (lines.Length == 0)
+					continue;
+				
+				sb.AppendFormat("[{0}]\n{1}\n", category.Name, lines);
+			}
+
+			if (sb.ToString().Length > 0)
+				MessageBox.Show(sb.ToString());
 		}
 
 		public CategoryCollection Categories

@@ -29,6 +29,7 @@ namespace IntelOrca.WITC
 		{
 			Settings.Load();
 			CardBank.Load();
+			// CardBank.CheckForDuplicates();
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
