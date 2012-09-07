@@ -14,6 +14,7 @@ namespace IntelOrca.WITC
 {
 	partial class MainForm : Form
 	{
+		private CheckedListBox checkedListBox1;
 		private int mOriginalFormHeight;
 
 		public MainForm()
@@ -32,7 +33,7 @@ namespace IntelOrca.WITC
 			this.SuspendLayout();
 
 			lblPlayedRounds.Text = String.Format("Played rounds: {0}", Program.Game.PlayedRounds);
-			lblCategory.Text = String.Format("Category: {0}", Program.Game.Category);
+			lblCategory.Text = String.Format("Category: {0}", Program.Game.CurrentBag.Category);
 
 			lblCurrentPlayer.Text = String.Format("{0}'s turn", Program.Game.CurrentTeam.PlayerGo.Name);
 
@@ -135,7 +136,7 @@ namespace IntelOrca.WITC
 			labels[0].Size = new Size(panel.Width - (scoreLabelWidth * 5) - 6 - 12, panel.Height);
 
 			for (int i = 1; i < labels.Length; i++) {
-				labels[i].Location = new Point(grpParticipants.Width - (scoreLabelWidth * (5 - i)) - 6, 0);
+				labels[i].Location = new Point(grpParticipants.Width - (scoreLabelWidth * (6 - i)) - 6, 0);
 			}
 		}
 
@@ -148,7 +149,7 @@ namespace IntelOrca.WITC
 
 		private void btnNextRound_Click(object sender, EventArgs e)
 		{
-			Category category = Program.CardBank.Categories[Program.Game.Category];
+			Category category = Program.CardBank.Categories[Program.Game.CurrentBag.Category];
 			if (category == null) {
 				MessageBox.Show("Category does not exist", Program.AppName);
 				return;
@@ -166,6 +167,7 @@ namespace IntelOrca.WITC
 
 			Program.Game.PlayedRounds++;
 			Program.Game.NextTeam();
+			Program.Game.RandomizeCurrentBag();
 			UpdateLabels();
 
 			Program.Game.SaveGame();
@@ -193,12 +195,6 @@ namespace IntelOrca.WITC
 					Show();
 				}
 			}
-		}
-
-		protected override void OnClosing(CancelEventArgs e)
-		{
-			e.Cancel = true;
-			btnFinishGame_Click(this, e);
 		}
 	}
 }

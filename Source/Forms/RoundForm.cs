@@ -50,7 +50,7 @@ namespace IntelOrca.WITC
 		private void EndRound()
 		{
 			foreach (string card in mCardsInHand)
-				Program.Game.PushCard(card);
+				Program.Game.CurrentBag.PushCard(card);
 
 			tmrUpdate.Stop();
 		}
@@ -81,7 +81,7 @@ namespace IntelOrca.WITC
 
 		private void PickupCard()
 		{
-			mCardsInHand.Add(Program.Game.PopCard());
+			mCardsInHand.Add(Program.Game.CurrentBag.PopCard());
 			mViewingCardIndex = mCardsInHand.Count - 1;
 		}
 
@@ -90,7 +90,7 @@ namespace IntelOrca.WITC
 			Audio.PlaySound(Audio.Sounds.Correct);
 
 			// Add to used cards
-			Program.CardBank.UsedCards.AddCard(Program.Game.Category, mCardsInHand[mViewingCardIndex]);
+			Program.CardBank.UsedCards.AddCard(Program.Game.CurrentBag.Category, mCardsInHand[mViewingCardIndex]);
 
 			Program.Game.CurrentPlayer.Correct++;
 			mCardsInHand.RemoveAt(mViewingCardIndex);
@@ -114,7 +114,7 @@ namespace IntelOrca.WITC
 			Audio.PlaySound(Audio.Sounds.Foul);
 
 			// Add to used cards
-			Program.CardBank.UsedCards.AddCard(Program.Game.Category, mCardsInHand[mViewingCardIndex]);
+			Program.CardBank.UsedCards.AddCard(Program.Game.CurrentBag.Category, mCardsInHand[mViewingCardIndex]);
 
 			Program.Game.CurrentPlayer.Foul++;
 			mCardsInHand.RemoveAt(mViewingCardIndex);

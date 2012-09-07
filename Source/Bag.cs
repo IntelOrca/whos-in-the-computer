@@ -1,69 +1,79 @@
-﻿using System;
-using System.Collections;
+﻿////////////////////////////////////
+// Who's in the Computer          //
+// Copyright (C) Ted John 2012    //
+// http://intelorca.co.uk         //
+////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
-namespace WITC
+namespace IntelOrca.WITC
 {
-	class Bag : IEnumerable<string>
+	class Bag
 	{
-		private CardBank mBank;
-		private List<string> mCards = new List<string>();
+		private Random mRandom;
+		private string mCategory;
+		private List<string> mCards;
 
-		public Bag(CardBank bank)
+		public Bag(string category)
 		{
-			mBank = bank;
+			mRandom = new Random();
+			mCategory = category;
+			mCards = new List<string>();
 		}
 
-		public void AddCard(string card)
+		public void FillBag()
+		{
+			Category allCards = Program.CardBank.Categories[mCategory];
+			Category usedCards = Program.CardBank.UsedCards[mCategory];
+
+			if (allCards == null)
+				throw new Exception();
+
+			IEnumerable<string> cards = allCards;
+
+			// Remove any cards that have been used before
+			if (usedCards != null)
+				cards = cards.Except(usedCards);
+
+			// Remove any cards we already have in our bag
+			cards = cards.Except(mCards);
+
+			// Check if there are any cards left
+			if (cards.Count() == 0) {
+				// Clear used cards
+				if (usedCards.Count() > 0)
+					usedCards.Clear();
+			}
+
+			mCards.AddRange(cards);
+		}
+
+		public string PopCard()
+		{
+			if (mCards.Count == 0)
+				FillBag();
+			if (mCards.Count == 0)
+				throw new Exception();
+
+			int ridx = mRandom.Next(0, mCards.Count);
+			string card = mCards[ridx];
+			mCards.RemoveAt(ridx);
+			return card;
+		}
+
+		public void PushCard(string card)
 		{
 			mCards.Add(card);
 		}
 
-		public void AddCategory(string category)
-		{
-			Category c = mBank[category];
-			for (int i = 0; i < c.mCards.Count; i++) {
-				AddCard(c.mCards[i]);
-			}
-		}
-
-		public string GetRandomCard()
-		{
-			Random r = new Random();
-			int i = r.Next(0, mCards.Count);
-			return mCards[i];
-		}
-
-		public void RemoveCard(string card)
-		{
-			mCards.Remove(card);
-		}
-
-		public bool ContainsCard(string card)
-		{
-			return mCards.Contains(card);
-		}
-
-		public IEnumerator<string> GetEnumerator()
-		{
-			return mCards.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return mCards.GetEnumerator();
-		}
-
-		public override string ToString()
-		{
-			return String.Format("Cards = {0}", mCards.Count);
-		}
-
-		public int CardCount
+		public string Category
 		{
 			get
 			{
-				return mCards.Count;
+				return mCategory;
 			}
 		}
 	}

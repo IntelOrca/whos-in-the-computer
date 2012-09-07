@@ -17,11 +17,12 @@ namespace IntelOrca.WITC
 		private Team[] mTeams;
 		private int mRoundDuration;
 		private int mMaximumPasses;
-		private string mCategory;
+		private string[] mCategories = new string[0];
 		private int mPlayedRounds;
 
 		private int mCurrentTeamGo;
-		private List<string> mCards = new List<string>();
+		private int mCurrentBagIndex;
+		private List<Bag> mBags = new List<Bag>();
 
 		public void LoadGame()
 		{
@@ -51,9 +52,13 @@ namespace IntelOrca.WITC
 				mTeams = teams;
 				mRoundDuration = br.ReadInt32();
 				mMaximumPasses = br.ReadInt32();
-				mCategory = br.ReadString();
+				mCategories = new string[br.ReadInt32()];
+				for (int i = 0; i < mCategories.Length; i++)
+					mCategories[i] = br.ReadString();
 				mPlayedRounds = br.ReadInt32();
 				mCurrentTeamGo = br.ReadInt32();
+
+				InitialiseBags();
 			} finally {
 				if (br != null)
 					br.Close();
@@ -87,7 +92,9 @@ namespace IntelOrca.WITC
 
 				bw.Write(mRoundDuration);
 				bw.Write(mMaximumPasses);
-				bw.Write(mCategory);
+				bw.Write(mCategories.Length);
+				foreach (string category in mCategories)
+					bw.Write(category);
 				bw.Write(mPlayedRounds);
 				bw.Write(mCurrentTeamGo);
 			} catch {
@@ -100,6 +107,19 @@ namespace IntelOrca.WITC
 			}
 		}
 
+		public void InitialiseBags()
+		{
+			mBags.Clear();
+			foreach (string category in mCategories)
+				mBags.Add(new Bag(category));
+			RandomizeCurrentBag();
+		}
+
+		public void RandomizeCurrentBag()
+		{
+			mCurrentBagIndex = mRandom.Next(mBags.Count);
+		}
+
 		public void FinishGame()
 		{
 			try {
@@ -110,55 +130,18 @@ namespace IntelOrca.WITC
 			}
 		}
 
-		public void FillBag()
-		{
-			Category allCards = Program.CardBank.Categories[mCategory];
-			Category usedCards = Program.CardBank.UsedCards[mCategory];
-
-			if (allCards == null)
-				throw new Exception();
-
-			IEnumerable<string> cards = allCards;
-
-			// Remove any cards that have been used before
-			if (usedCards != null)
-				cards = cards.Except(usedCards);
-
-			// Remove any cards we already have in our bag
-			cards = cards.Except(mCards);
-
-			// Check if there are any cards left
-			if (cards.Count() == 0) {
-				// Clear used cards
-				if (usedCards.Count() > 0)
-					usedCards.Clear();
-			}
-
-			mCards.AddRange(cards);
-		}
-
-		public string PopCard()
-		{
-			if (mCards.Count == 0)
-				FillBag();
-			if (mCards.Count == 0)
-				throw new Exception();
-
-			int ridx = mRandom.Next(0, mCards.Count);
-			string card = mCards[ridx];
-			mCards.RemoveAt(ridx);
-			return card;
-		}
-
-		public void PushCard(string card)
-		{
-			mCards.Add(card);
-		}
-
 		public void NextTeam()
 		{
 			mTeams[mCurrentTeamGo].NextPlayer();
 			mCurrentTeamGo = (mCurrentTeamGo + 1) % mTeams.Length;
+		}
+
+		public Bag CurrentBag
+		{
+			get
+			{
+				return mBags[mCurrentBagIndex];
+			}
 		}
 
 		public Team CurrentTeam
@@ -213,15 +196,15 @@ namespace IntelOrca.WITC
 			}
 		}
 
-		public string Category
+		public string[] Categories
 		{
 			get
 			{
-				return mCategory;
+				return mCategories;
 			}
 			set
 			{
-				mCategory = value;
+				mCategories = value;
 			}
 		}
 

@@ -22,7 +22,7 @@ namespace IntelOrca.WITC
 		private Result mResult;
 		private int mRoundDuration;
 		private int mMaximumPasses;
-		private string mCategory;
+		private string[] mCategories;
 		private bool mResetReleventCards;
 
 		public GameSetupForm()
@@ -33,9 +33,20 @@ namespace IntelOrca.WITC
 			this.Text = Program.AppName;
 
 			foreach (Category category in Program.CardBank.Categories.Cast<Category>().OrderBy(c => c.Name))
-				cmbCategory.Items.Add(category.Name);
-			if (cmbCategory.Items.Count > 0)
-				cmbCategory.SelectedIndex = 0;
+				clbCategories.Items.Add(category.Name);
+		}
+
+		protected override void OnShown(EventArgs e)
+		{
+			base.OnShown(e);
+
+			// Reset checked items
+			for (int i = 0; i < clbCategories.Items.Count; i++)
+				clbCategories.SetItemChecked(i, false);
+
+			// Set checked items
+			foreach (string category in mCategories)
+				clbCategories.SetItemChecked(clbCategories.Items.IndexOf(category), true);
 		}
 
 		private void btnBack_Click(object sender, EventArgs e)
@@ -47,14 +58,34 @@ namespace IntelOrca.WITC
 
 		private void btnContinue_Click(object sender, EventArgs e)
 		{
+			if (clbCategories.CheckedItems.Count == 0) {
+				MessageBox.Show("You must select at least one category.", Program.AppName);
+				return;
+			}
+
 			mRoundDuration = (int)nudRoundDuration.Value;
 			mMaximumPasses = (int)nudMaxPasses.Value;
-			mCategory = cmbCategory.Text;
 			mResetReleventCards = chkResetReleventCards.Checked;
+
+			// Get categories
+			mCategories = new string[clbCategories.CheckedItems.Count];
+			for (int i = 0; i < clbCategories.CheckedItems.Count; i++)
+				mCategories[i] = (string)clbCategories.CheckedItems[i];
 
 			mResult = Result.Continue;
 			this.DialogResult = DialogResult.OK;
 			Close();
+		}
+
+		private void clbCategories_ItemCheck(object sender, ItemCheckEventArgs e)
+		{
+			int count = clbCategories.CheckedItems.Count;
+			if (e.CurrentValue == CheckState.Unchecked && e.NewValue == CheckState.Checked)
+				count++;
+			else if (e.CurrentValue == CheckState.Checked && e.NewValue == CheckState.Unchecked)
+				count--;
+
+			lblSuperCategories.Text = String.Format("Categories ({0})", count);
 		}
 
 		public Result WizardResult
@@ -89,15 +120,15 @@ namespace IntelOrca.WITC
 			}
 		}
 
-		public string Category
+		public string[] Categories
 		{
 			get
 			{
-				return mCategory;
+				return mCategories;
 			}
 			set
 			{
-				mCategory = value;
+				mCategories = value;
 			}
 		}
 

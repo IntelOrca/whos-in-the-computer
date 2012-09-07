@@ -150,4 +150,3 @@
 		private System.Windows.Forms.Label lblCurrentPlayer;
 	}
 }
-

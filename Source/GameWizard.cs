@@ -49,7 +49,7 @@ namespace IntelOrca.WITC
 			Program.Game.Teams[0].AddPlayer("Graham", "Janet", "Ellie", "Ryan");
 			Program.Game.Teams[1].AddPlayer("Becky", "James", "Ted");
 
-			return ShowPlayerForm;
+			return ShowGameSetupForm;
 		}
 
 		private StepAction ShowPlayerForm()
@@ -57,38 +57,41 @@ namespace IntelOrca.WITC
 			PlayerSetupForm playerSetupForm = new PlayerSetupForm();
 			playerSetupForm.Teams = Program.Game.Teams;
 
-			if (playerSetupForm.ShowDialog() != DialogResult.OK)
+			if (playerSetupForm.ShowDialog() != DialogResult.OK)				
 				return null;
 
 			if (playerSetupForm.WizardResult == PlayerSetupForm.Result.Back)
-				return ShowStartupForm;
+				return ShowGameSetupForm;
 
 			Program.Game.Teams = playerSetupForm.Teams;
+			Program.Game.SaveGame();
 
-			return ShowGameSetupForm;
+			Program.Game.InitialiseBags();
+
+			mCompleted = true;
+			return null;
 		}
 
 		private StepAction ShowGameSetupForm()
 		{
 			//Show game setup form
 			GameSetupForm gameSetupForm = new GameSetupForm();
+			gameSetupForm.Categories = Program.Game.Categories;
 			if (gameSetupForm.ShowDialog() != DialogResult.OK)
 				return null;
 
 			if (gameSetupForm.WizardResult == GameSetupForm.Result.Back)
-				return ShowPlayerForm;
+				return ShowStartupForm;
 
 			Program.Game.RoundDuration = gameSetupForm.RoundDuration;
 			Program.Game.MaximumPasses = gameSetupForm.MaximumPasses;
-			Program.Game.Category = gameSetupForm.Category;
+			Program.Game.Categories = gameSetupForm.Categories;
 
 			if (gameSetupForm.ResetReleventCards)
-				Program.CardBank.ResetUsedCards(Program.Game.Category);
+				foreach (string category in Program.Game.Categories)
+					Program.CardBank.ResetUsedCards(category);
 
-			Program.Game.SaveGame();
-
-			mCompleted = true;
-			return null;
+			return ShowPlayerForm;
 		}
 	}
 }

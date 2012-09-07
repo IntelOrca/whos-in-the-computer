@@ -34,9 +34,9 @@
 			this.nudRoundDuration = new System.Windows.Forms.NumericUpDown();
 			this.lblSuperCategories = new System.Windows.Forms.Label();
 			this.chkResetReleventCards = new System.Windows.Forms.CheckBox();
-			this.cmbCategory = new System.Windows.Forms.ComboBox();
 			this.nudMaxPasses = new System.Windows.Forms.NumericUpDown();
 			this.label1 = new System.Windows.Forms.Label();
+			this.clbCategories = new System.Windows.Forms.CheckedListBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudRoundDuration)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudMaxPasses)).BeginInit();
 			this.SuspendLayout();
@@ -56,7 +56,7 @@
 			// 
 			this.btnContinue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnContinue.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnContinue.Location = new System.Drawing.Point(250, 272);
+			this.btnContinue.Location = new System.Drawing.Point(250, 341);
 			this.btnContinue.Name = "btnContinue";
 			this.btnContinue.Size = new System.Drawing.Size(124, 32);
 			this.btnContinue.TabIndex = 2;
@@ -68,7 +68,7 @@
 			// 
 			this.btnBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnBack.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBack.Location = new System.Drawing.Point(120, 272);
+			this.btnBack.Location = new System.Drawing.Point(120, 341);
 			this.btnBack.Name = "btnBack";
 			this.btnBack.Size = new System.Drawing.Size(124, 32);
 			this.btnBack.TabIndex = 3;
@@ -124,28 +124,18 @@
 			this.lblSuperCategories.Name = "lblSuperCategories";
 			this.lblSuperCategories.Size = new System.Drawing.Size(362, 23);
 			this.lblSuperCategories.TabIndex = 6;
-			this.lblSuperCategories.Text = "Category:";
+			this.lblSuperCategories.Text = "Categories (0):";
 			// 
 			// chkResetReleventCards
 			// 
 			this.chkResetReleventCards.AutoSize = true;
 			this.chkResetReleventCards.Font = new System.Drawing.Font("Calibri", 12F);
-			this.chkResetReleventCards.Location = new System.Drawing.Point(29, 242);
+			this.chkResetReleventCards.Location = new System.Drawing.Point(29, 309);
 			this.chkResetReleventCards.Name = "chkResetReleventCards";
 			this.chkResetReleventCards.Size = new System.Drawing.Size(161, 23);
 			this.chkResetReleventCards.TabIndex = 11;
 			this.chkResetReleventCards.Text = "Reset relevent cards";
 			this.chkResetReleventCards.UseVisualStyleBackColor = true;
-			// 
-			// cmbCategory
-			// 
-			this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cmbCategory.Font = new System.Drawing.Font("Calibri", 12F);
-			this.cmbCategory.FormattingEnabled = true;
-			this.cmbCategory.Location = new System.Drawing.Point(29, 209);
-			this.cmbCategory.Name = "cmbCategory";
-			this.cmbCategory.Size = new System.Drawing.Size(215, 27);
-			this.cmbCategory.TabIndex = 12;
 			// 
 			// nudMaxPasses
 			// 
@@ -176,14 +166,26 @@
 			this.label1.TabIndex = 13;
 			this.label1.Text = "Maximum passes:";
 			// 
+			// clbCategories
+			// 
+			this.clbCategories.CheckOnClick = true;
+			this.clbCategories.Font = new System.Drawing.Font("Calibri", 12F);
+			this.clbCategories.FormattingEnabled = true;
+			this.clbCategories.Location = new System.Drawing.Point(29, 209);
+			this.clbCategories.Name = "clbCategories";
+			this.clbCategories.ScrollAlwaysVisible = true;
+			this.clbCategories.Size = new System.Drawing.Size(215, 92);
+			this.clbCategories.TabIndex = 15;
+			this.clbCategories.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbCategories_ItemCheck);
+			// 
 			// GameSetupForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(386, 316);
+			this.ClientSize = new System.Drawing.Size(386, 385);
+			this.Controls.Add(this.clbCategories);
 			this.Controls.Add(this.nudMaxPasses);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.cmbCategory);
 			this.Controls.Add(this.chkResetReleventCards);
 			this.Controls.Add(this.lblSuperCategories);
 			this.Controls.Add(this.nudRoundDuration);
@@ -213,8 +215,8 @@
 		private System.Windows.Forms.NumericUpDown nudRoundDuration;
 		private System.Windows.Forms.Label lblSuperCategories;
 		private System.Windows.Forms.CheckBox chkResetReleventCards;
-		private System.Windows.Forms.ComboBox cmbCategory;
 		private System.Windows.Forms.NumericUpDown nudMaxPasses;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.CheckedListBox clbCategories;
 	}
 }
