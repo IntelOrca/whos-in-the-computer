@@ -1,0 +1,55 @@
+﻿<Page
+    x:Class="IntelOrca.WITC.Metro.PlayerSetupPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:IntelOrca.WITC.Metro"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Key="TeamTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DefaultStyles_TextBox}">
+            <Setter Property="Background" Value="#6666FF" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+        </Style>
+        <Style x:Key="PlayerTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DefaultStyles_TextBox}">
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="Padding" Value="26,3,10,5" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+            <TextBlock Text="Number of teams" />
+            <ComboBox Name="_numberOfTeamsDropDown" Margin="16,0,0,0" Width="92" SelectionChanged="_numberOfTeamsDropDown_SelectionChanged" />
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0,16">
+            <StackPanel Name="_teamStackPanel" />
+        </ScrollViewer>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Randomise teams" Width="256" Click="RandomiseButtonOnClick" />
+            <Button Grid.Column="2" Content="Back" Width="128" Click="BackButtonOnClick" />
+            <Button Grid.Column="3" Content="Play" Width="128" Click="PlayButtonOnClick" />
+        </Grid>
+    </Grid>
+</Page>
